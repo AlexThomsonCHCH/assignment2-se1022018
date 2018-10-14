@@ -1,6 +1,6 @@
 var results = [
-  {name: 'Satisfied', count: 1043, color: 'red'},
-  {name: 'Neutral', count: 563, color: 'purple'},
+  {name: 'Satisfied', count: 1043, color: 'lightblue'},
+  {name: 'Neutral', count: 563, color: 'lightgreen'},
   {name: 'Unsatisfied', count: 510, color: 'pink'},
   {name: 'No comment', count: 175, color: 'silver'}
 ]
@@ -61,15 +61,12 @@ CanvasDisplay.prototype.updateViewport = function (state) {
 }
 
 CanvasDisplay.prototype.clearDisplay = function (status) {
-  var image = new Image()
-  image.src = 'images/download.jpg'
   if (status == 'won') {
     this.cx.fillStyle = 'rgb(68, 191, 255)'
   } else if (status == 'lost') {
     this.cx.fillStyle = 'rgb(44, 136, 214)'
   } else {
-    var pat = this.cx.createPattern(image, 'repeat-y')
-    this.cx.fillStyle = pat
+    this.cx.fillStyle = 'rgb(52, 166, 251)'
   }
   this.cx.fillRect(0, 0,
     this.canvas.width, this.canvas.height)

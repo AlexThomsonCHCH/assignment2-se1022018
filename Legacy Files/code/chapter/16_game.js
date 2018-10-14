@@ -146,7 +146,7 @@ var DOMDisplay = class DOMDisplay {
   clear () { this.dom.remove() }
 }
 
-var scale = 20
+var scale = 30
 
 function drawGrid (level) {
   return elt('table', {
@@ -268,7 +268,7 @@ Lava.prototype.update = function (time, state) {
   }
 }
 
-var wobbleSpeed = 0, wobbleDist = 0
+var wobbleSpeed = 8, wobbleDist = 0.07
 
 Coin.prototype.update = function (time) {
   let wobble = this.wobble + time * wobbleSpeed
@@ -290,6 +290,7 @@ Player.prototype.update = function (time, state, keys) {
   if (!state.level.touches(movedX, this.size, 'wall')) {
     pos = movedX
   }
+
   let ySpeed = this.speed.y + time * gravity
   let movedY = pos.plus(new Vec(0, ySpeed * time))
   if (!state.level.touches(movedY, this.size, 'wall')) {
