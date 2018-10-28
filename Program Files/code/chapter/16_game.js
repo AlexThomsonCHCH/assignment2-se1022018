@@ -1,3 +1,4 @@
+/* global requestAnimationFrame */
 var simpleLevelPlan = `
 ......................
 ..#................#..
@@ -40,7 +41,7 @@ var State = class State {
   }
 
   get player () {
-    return this.actors.find(a => a.type == 'player')
+    return this.actors.find(a => a.type === 'player')
   }
 }
 
@@ -82,11 +83,11 @@ var Lava = class Lava {
   get type () { return 'lava' }
 
   static create (pos, ch) {
-    if (ch == '=') {
+    if (ch === '=') {
       return new Lava(pos, new Vec(2, 0))
-    } else if (ch == '|') {
+    } else if (ch === '|') {
       return new Lava(pos, new Vec(0, 2))
-    } else if (ch == 'v') {
+    } else if (ch === 'v') {
       return new Lava(pos, new Vec(0, 3), pos)
     }
   }
@@ -123,7 +124,7 @@ var levelChars = {
   'v': Lava
 }
 
-var simpleLevel = new Level(simpleLevelPlan)
+var simpleLevel = new Level(simpleLevelPlan) // eslint-disable-line no-unused-vars
 
 function elt (name, attrs, ...children) {
   let dom = document.createElement(name)
@@ -183,8 +184,10 @@ DOMDisplay.prototype.scrollPlayerIntoView = function (state) {
   let margin = width / 3
 
   // The viewport
-  let left = this.dom.scrollLeft, right = left + width
-  let top = this.dom.scrollTop, bottom = top + height
+  let left = this.dom.scrollLeft
+  let right = left + width
+  let top = this.dom.scrollTop
+  let bottom = top + height
 
   let player = state.player
   let center = player.pos.plus(player.size.times(0.5))
@@ -213,7 +216,7 @@ Level.prototype.touches = function (pos, size, type) {
       let isOutside = x < 0 || x >= this.width ||
                       y < 0 || y >= this.height
       let here = isOutside ? 'wall' : this.rows[y][x]
-      if (here == type) return true
+      if (here === type) return true
     }
   }
   return false
@@ -224,7 +227,7 @@ State.prototype.update = function (time, keys) {
     .map(actor => actor.update(time, this, keys))
   let newState = new State(this.level, actors, this.status)
 
-  if (newState.status != 'playing') return newState
+  if (newState.status !== 'playing') return newState
 
   let player = newState.player
   if (this.level.touches(player.pos, player.size, 'lava')) {
@@ -232,7 +235,7 @@ State.prototype.update = function (time, keys) {
   }
 
   for (let actor of actors) {
-    if (actor != player && overlap(actor, player)) {
+    if (actor !== player && overlap(actor, player)) {
       newState = actor.collide(newState)
     }
   }
@@ -251,9 +254,9 @@ Lava.prototype.collide = function (state) {
 }
 
 Coin.prototype.collide = function (state) {
-  let filtered = state.actors.filter(a => a != this)
+  let filtered = state.actors.filter(a => a !== this)
   let status = state.status
-  if (!filtered.some(a => a.type == 'coin')) status = 'won'
+  if (!filtered.some(a => a.type === 'coin')) status = 'won'
   return new State(state.level, filtered, status)
 }
 
@@ -268,7 +271,8 @@ Lava.prototype.update = function (time, state) {
   }
 }
 
-var wobbleSpeed = 0, wobbleDist = 0
+var wobbleSpeed = 0
+var wobbleDist = 0
 
 Coin.prototype.update = function (time) {
   let wobble = this.wobble + time * wobbleSpeed
@@ -306,7 +310,7 @@ function trackKeys (keys) {
   let down = Object.create(null)
   function track (event) {
     if (keys.includes(event.key)) {
-      down[event.key] = event.type == 'keydown'
+      down[event.key] = event.type === 'keydown'
       event.preventDefault()
     }
   }
@@ -339,7 +343,7 @@ function runLevel (level, Display) {
     runAnimation(time => {
       state = state.update(time, arrowKeys)
       display.setState(state)
-      if (state.status == 'playing') {
+      if (state.status === 'playing') {
         return true
       } else if (ending > 0) {
         ending -= time
@@ -353,11 +357,11 @@ function runLevel (level, Display) {
   })
 }
 
-async function runGame (plans, Display) {
+async function runGame (plans, Display) { // eslint-disable-line no-unused-vars
   for (let level = 0; level < plans.length;) {
     let status = await runLevel(new Level(plans[level]),
       Display)
-    if (status == 'won') level++
+    if (status === 'won') level++
   }
   console.log("You've won!")
 }

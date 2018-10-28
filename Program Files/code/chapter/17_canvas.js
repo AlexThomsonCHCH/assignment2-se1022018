@@ -1,4 +1,5 @@
-var results = [
+/* global scale Image */
+var results = [ // eslint-disable-line no-unused-vars
   {name: 'Satisfied', count: 1043, color: 'red'},
   {name: 'Neutral', count: 563, color: 'purple'},
   {name: 'Unsatisfied', count: 510, color: 'pink'},
@@ -42,7 +43,8 @@ CanvasDisplay.prototype.setState = function (state) {
 }
 
 CanvasDisplay.prototype.updateViewport = function (state) {
-  let view = this.viewport, margin = view.width / 3
+  let view = this.viewport
+  let margin = view.width / 3
   let player = state.player
   let center = player.pos.plus(player.size.times(0.5))
 
@@ -63,9 +65,9 @@ CanvasDisplay.prototype.updateViewport = function (state) {
 CanvasDisplay.prototype.clearDisplay = function (status) {
   var image = new Image()
   image.src = 'images/download.jpg'
-  if (status == 'won') {
+  if (status === 'won') {
     this.cx.fillStyle = 'rgb(68, 191, 255)'
-  } else if (status == 'lost') {
+  } else if (status === 'lost') {
     this.cx.fillStyle = 'rgb(44, 136, 214)'
   } else {
     var pat = this.cx.createPattern(image, 'repeat-y')
@@ -88,10 +90,10 @@ CanvasDisplay.prototype.drawBackground = function (level) {
   for (let y = yStart; y < yEnd; y++) {
     for (let x = xStart; x < xEnd; x++) {
       let tile = level.rows[y][x]
-      if (tile == 'empty') continue
+      if (tile === 'empty') continue
       let screenX = (x - left) * scale
       let screenY = (y - top) * scale
-      let tileX = tile == 'lava' ? scale : 0
+      let tileX = tile === 'lava' ? scale : 0
       this.cx.drawImage(otherSprites,
         tileX, 0, scale, scale,
         screenX, screenY, scale, scale)
@@ -107,14 +109,14 @@ CanvasDisplay.prototype.drawPlayer = function (player, x, y,
   width, height) {
   width += playerXOverlap * 2
   x -= playerXOverlap
-  if (player.speed.x != 0) {
+  if (player.speed.x !== 0) {
     this.flipPlayer = player.speed.x < 0
   }
 
   let tile = 8
-  if (player.speed.y != 0) {
+  if (player.speed.y !== 0) {
     tile = 9
-  } else if (player.speed.x != 0) {
+  } else if (player.speed.x !== 0) {
     tile = Math.floor(Date.now() / 60) % 8
   }
 
@@ -134,10 +136,10 @@ CanvasDisplay.prototype.drawActors = function (actors) {
     let height = actor.size.y * scale
     let x = (actor.pos.x - this.viewport.left) * scale
     let y = (actor.pos.y - this.viewport.top) * scale
-    if (actor.type == 'player') {
+    if (actor.type === 'player') {
       this.drawPlayer(actor, x, y, width, height)
     } else {
-      let tileX = (actor.type == 'coin' ? 2 : 1) * scale
+      let tileX = (actor.type === 'coin' ? 2 : 1) * scale
       this.cx.drawImage(otherSprites,
         tileX, 0, width, height,
         x, y, width, height)
